@@ -18,21 +18,6 @@ variable "aws_version" {
   type = string
 }
 
-variable "backend" {
-  default = ""
-  type = string
-}
-
-variable "key_state" {
-  default = ""
-  type = string
-}
-
-variable "state_lock" {
-  default = ""
-  type = string 
-}
-
 variable "bucket_name" {
   default = ""
   type = string
