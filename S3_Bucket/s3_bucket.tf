@@ -34,11 +34,11 @@ resource "aws_s3_bucket_website_configuration" "static_website_configuration" {
   bucket = aws_s3_bucket.static_website.id
 
   index_document {
-    suffix = var.index_html
+    suffix = "index.html"
   }
 
   error_document {
-    key = var.error_html
+    key = "error_html"
   }
 
   routing_rule {
@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  default_root_object = var.index.html
+  default_root_object = "index.html"
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
