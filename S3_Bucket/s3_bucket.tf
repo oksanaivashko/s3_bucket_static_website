@@ -14,10 +14,10 @@ terraform {
 
 terraform {
   backend "s3" {
-    bucket         = var.backend
-    region         = var.region
-    key            = var.key_state
-    dynamodb_table = var.state_lock
+    bucket         = "terraform-session-september-backend-oksana"
+    region         = "us-west-2"
+    key            = "s3_static-web/backend/terrafrom.rfstate"
+    dynamodb_table = "terraform-session-sep-state-lock"
   }
 }
 
