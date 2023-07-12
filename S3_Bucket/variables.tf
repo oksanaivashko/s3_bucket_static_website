@@ -1,18 +1,31 @@
 variable "region" {
-  default = ""
+  default = "us-west-2"
+  type = string
+}
+
+variable "tf_version" {
+  default = "~> 1.5.2"
   type = string
 }
 
 variable "bucket_name" {
-  default = ""
+  default = "demo-s3-bucket-test-oksana-tf"
   type = string
 }
 
 variable "env" {
-  default = ""
+  default = "dev"
   type = string
 }
 
+variable "index_html" {
+    default = "index.html"
+    type = string
+}
+variable "error_html" {
+  default = "error_html"
+  type = string
+}
 # ---- certificate arn ---
 
 variable "acm_arn" {

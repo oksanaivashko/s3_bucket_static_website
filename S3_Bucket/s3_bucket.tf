@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 terraform {
-  required_version = "~> 1.5.2"
+  required_version = var.tf_version
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -34,11 +34,11 @@ resource "aws_s3_bucket_website_configuration" "static_website_configuration" {
   bucket = aws_s3_bucket.static_website.id
 
   index_document {
-    suffix = "index.html"
+    suffix = var.index_html
   }
 
   error_document {
-    key = "error_html"
+    key = var.error_html
   }
 
   routing_rule {
@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  default_root_object = "index.html"
+  default_root_object = var.index_html
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
