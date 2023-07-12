@@ -3,11 +3,6 @@ variable "region" {
   type = string
 }
 
-variable "tf_version" {
-  default = "~> 1.5.2"
-  type = string
-}
-
 variable "bucket_name" {
   default = "demo-s3-bucket-test-oksana-tf"
   type = string
