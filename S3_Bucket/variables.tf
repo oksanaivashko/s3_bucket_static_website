@@ -28,12 +28,12 @@ variable "env" {
   type = string
 }
 
-variable "index.html" {
+variable "index_html" {
   default = "index.html"
   type = string
 }
 
-variable "error.html" {
+variable "error_html" {
   default = "error.html"
   type = string
 }

@@ -7,7 +7,7 @@ terraform {
   required_providers {
     aws = {
       source  = var.aws_source
-      version = var.aws_version
+      version = "~> 4.53.0"
     }
   }
 }
@@ -34,11 +34,11 @@ resource "aws_s3_bucket_website_configuration" "static_website_configuration" {
   bucket = aws_s3_bucket.static_website.id
 
   index_document {
-    suffix = var.index.html
+    suffix = var.index_html
   }
 
   error_document {
-    key = var.error.html
+    key = var.error_html
   }
 
   routing_rule {
