@@ -137,3 +137,18 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
     ssl_support_method  = "sni-only"
   }
 }
+
+# ---- Route 53 record set ----
+ 
+
+resource "aws_route53_record" "cloudfront_record" {
+  zone_id = "Z0480476I3YP7F1IGH87"  
+  name    = "oksanai.com"           
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.static_website_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.static_website_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
