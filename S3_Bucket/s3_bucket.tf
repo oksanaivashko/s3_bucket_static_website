@@ -89,6 +89,7 @@ resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
 # ----- cloudFront distribution with the static website ------
 
 resource "aws_cloudfront_distribution" "static_website_distribution" {
+  depends_on = [aws_s3_bucket_policy.static_website_policy]  
   origin {
     domain_name = aws_s3_bucket.static_website.bucket_domain_name
     origin_id   = aws_s3_bucket.static_website.id
