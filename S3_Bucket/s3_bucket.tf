@@ -132,6 +132,11 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
     }
   }
 
+  resource "aws_acm_certificate" "imported_certificate" {
+  certificate_arn = "arn:aws:cloudfront::296584602587:distribution/E4NAV9Q3KPPI3"
+}
+
+
   viewer_certificate {
     acm_certificate_arn = "arn:aws:cloudfront::296584602587:distribution/E4NAV9Q3KPPI3"
     ssl_support_method  = "sni-only"
