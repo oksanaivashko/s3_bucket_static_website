@@ -69,7 +69,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::demo-s3-bucket-test-oksana-tf"
+                "arn:aws:s3:::demo-s3-bucket-test-oksana-tf/*"
             ]
         }
     ]
