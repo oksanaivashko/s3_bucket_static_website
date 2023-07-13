@@ -64,7 +64,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
         {
             "Sid": "PublicReadGetObject",
             "Effect": "Allow",
-            "Principal": "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070",
+            "Principal": "*"
             "Action": [
                 "s3:GetObject"
             ],
@@ -76,8 +76,6 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
 
   })
 }
-
-
 
 resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
   bucket = aws_s3_bucket.static_website.id
