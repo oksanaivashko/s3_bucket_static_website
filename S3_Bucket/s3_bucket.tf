@@ -24,7 +24,7 @@ terraform {
 resource "aws_s3_bucket" "static_website" {
   bucket = var.bucket_name
   tags = {
-    Name        = var.bucket_name
+    Name        = "demo-s3-bucket-test-oksana-tf"
     Environment = var.env
   }
 }
@@ -69,7 +69,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::demo-s3-bucket-test-oksana-tf/*"
+                "demo-s3-bucket-test-oksana-tf"
             ]
         }
     ]
@@ -133,7 +133,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
+    acm_certificate_arn = var.acm_arn
     ssl_support_method  = "sni-only"
   }
 }
