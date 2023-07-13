@@ -101,11 +101,11 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
-}
 
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = var.index_html
+}
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
