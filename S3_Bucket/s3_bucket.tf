@@ -53,7 +53,7 @@ resource "aws_s3_bucket_website_configuration" "static_website_configuration" {
 
 # ------ S3 Bucket Policies -------
 
-resource "aws_s3_bucket_policy" "static_website_policy" {
+esource "aws_s3_bucket_policy" "static_website_policy" {
   bucket = aws_s3_bucket.static_website.id
 
   policy = jsonencode({
@@ -69,13 +69,14 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "demo-s3-bucket-test-oksana-tf/*"
+                "arn:aws:s3:::demo-s3-bucket-test-oksana-tf/*"
             ]
         }
     ]
 
   })
 }
+
 
 
 resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
