@@ -53,7 +53,7 @@ resource "aws_s3_bucket_website_configuration" "static_website_configuration" {
 
 # ------ S3 Bucket Policies -------
 
-esource "aws_s3_bucket_policy" "static_website_policy" {
+resource "aws_s3_bucket_policy" "static_website_policy" {
   bucket = aws_s3_bucket.static_website.id
 
   policy = jsonencode({
