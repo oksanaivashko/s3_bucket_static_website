@@ -64,7 +64,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
         {
             "Sid": "PublicReadGetObject",
             "Effect": "Allow",
-            "Principal": "*"
+            "Principal": "*",
             "Action": [
                 "s3:GetObject"
             ],
