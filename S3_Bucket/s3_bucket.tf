@@ -64,7 +64,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
         {
             "Sid": "PublicReadGetObject",
             "Effect": "Allow",
-            "Principal": "*",
+            "Principal": "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070",
             "Action": [
                 "s3:GetObject"
             ],
@@ -84,8 +84,8 @@ resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
 
   block_public_acls       = true
   block_public_policy     = true
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 # ----- cloudFront distribution with the static website ------
@@ -134,7 +134,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.acm_arn
+    acm_certificate_arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
     ssl_support_method  = "sni-only"
   }
 }
