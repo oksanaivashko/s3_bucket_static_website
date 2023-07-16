@@ -107,11 +107,10 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
   default_root_object = var.index_html
 }
 
-  
-    default_cache_behavior {
+  default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    #target_origin_id = aws_s3_bucket.static_website.id
+    target_origin_id = aws_s3_bucket.static_website.id
 
     forwarded_values {
       query_string = false
@@ -134,6 +133,15 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
     }
   }
 
+  resource "aws_acm_certificate" "imported_certificate" {
+    arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
+}
+
+
+  viewer_certificate {
+    acm_certificate_arn = aws_acm_certificate.imported_certificate.arn
+    ssl_support_method  = "sni-only"
+}
 
 
 # ---- Route 53 record set ----
