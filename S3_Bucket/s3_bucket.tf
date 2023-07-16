@@ -107,7 +107,8 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
   default_root_object = var.index_html
 }
 
-  default_cache_behavior {
+  
+    default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     #target_origin_id = aws_s3_bucket.static_website.id
@@ -132,6 +133,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
       restriction_type = "none"
     }
   }
+
 
 
 # ---- Route 53 record set ----
