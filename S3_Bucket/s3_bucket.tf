@@ -117,13 +117,12 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
         forward = "none"
       }
     }
+  }
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
-  }
-}
 
   price_class = "PriceClass_100"
 
@@ -132,7 +131,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
       restriction_type = "none"
     }
   }
-
+}
   resource "aws_acm_certificate" "imported_certificate" {
     arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
 }
