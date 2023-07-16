@@ -105,7 +105,6 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = var.index_html
-}
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -124,6 +123,7 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
     default_ttl            = 3600
     max_ttl                = 86400
   }
+}
 
   price_class = "PriceClass_100"
 
