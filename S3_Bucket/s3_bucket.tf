@@ -137,10 +137,10 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
 #}
 
 
-#  viewer_certificate {
-#    acm_certificate_arn = aws_acm_certificate.imported_certificate.arn
-#    ssl_support_method  = "sni-only"
-#}
+  viewer_certificate {
+    acm_certificate_arn = aws_acm_certificate.imported_certificate.arn
+    ssl_support_method  = "sni-only"
+}
 
 
 # ---- Route 53 record set ----
