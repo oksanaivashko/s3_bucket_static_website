@@ -133,16 +133,6 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
     }
   }
 
-  resource "aws_acm_certificate" "imported_certificate" {
-    arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
-}
-
-
-  viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.imported_certificate.arn
-    ssl_support_method  = "sni-only"
-}
-
 
 # ---- Route 53 record set ----
  
