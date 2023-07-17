@@ -14,41 +14,26 @@ terraform {
 
 terraform {
   backend "s3" {
-    bucket         = "terraform-session-september-backend-oksana"
-    region         = "us-west-2"
-    key            = "s3_static-web/backend/terrafrom.rfstate"
-    dynamodb_table = "terraform-session-sep-state-lock"
+    bucket         = "terraform-backend-oksana"
+    region         = "us-east-1"
+    key            = "s3_static-web-test/backend/terrafrom.rfstate"
+    dynamodb_table = "terraform-state-lock"
   }
 }
 
 resource "aws_s3_bucket" "static_website" {
-  bucket = "demo-s3-bucket-test-oksana-tf"
+  bucket = var.bucket_name
+
   tags = {
-    Name        = "demo-s3-bucket-test-oksana-tf"
+    Name        = var.bucket_name
     Environment = var.env
   }
-}
-# ----- Static website configuration ---
 
-resource "aws_s3_bucket_website_configuration" "static_website_configuration" {
-  bucket = aws_s3_bucket.static_website.id
-
-  index_document {
-    suffix = var.index_html
+website {
+    index_document = "index.html"
+    error_document = "error.html"
   }
 
-  error_document {
-    key = var.error_html
-  }
-
-  routing_rule {
-    condition {
-      key_prefix_equals = "docs/"
-    }
-    redirect {
-      replace_key_prefix_with = "documents/"
-    }
-  }
 }
 
 # ------ S3 Bucket Policies -------
@@ -69,7 +54,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::demo-s3-bucket-test-oksana-tf/*"
+                "arn:aws:s3:::oksanai.com/*"
             ]
         }
     ]
@@ -86,10 +71,12 @@ resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
   restrict_public_buckets = false
 }
 
+
 # ----- cloudFront distribution with the static website ------
 
 resource "aws_cloudfront_distribution" "static_website_distribution" {
-  depends_on = [aws_s3_bucket_policy.static_website_policy]  
+  depends_on = [aws_s3_bucket.static_website]
+
   origin {
     domain_name = aws_s3_bucket.static_website.bucket_domain_name
     origin_id   = aws_s3_bucket.static_website.id
@@ -117,13 +104,13 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
         forward = "none"
       }
     }
-  
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
   }
+
   price_class = "PriceClass_100"
 
   restrictions {
@@ -131,24 +118,19 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
       restriction_type = "none"
     }
   }
+
+  viewer_certificate {
+    acm_certificate_arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"  
+    ssl_support_method  = "sni-only"
+  }
 }
-#  resource "aws_acm_certificate" "imported_certificate" {
-#    arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
-#}
-
-
-resource "aws_acm_certificate" "imported_certificate" {
-  arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
-}
-
 
 # ---- Route 53 record set ----
- 
 
 resource "aws_route53_record" "cloudfront_record" {
   zone_id = "Z0480476I3YP7F1IGH87"  
   name    = "oksanai.com"           
-  type    = "A"
+  type    = "CNAME"
 
   alias {
     name                   = aws_cloudfront_distribution.static_website_distribution.domain_name
