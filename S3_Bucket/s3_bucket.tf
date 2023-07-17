@@ -47,14 +47,17 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "PublicReadGetObject",
+            "Sid": "AllowCloudFrontAccess",
             "Effect": "Allow",
-            "Principal": "*",
+            "Principal": {
+        "AWS": "arn:aws:cloudfront::296584602587:distribution/E38BX16CN7PAD1"
+      },
             "Action": [
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::oksanai.com/*"
+                "arn:aws:s3:::oksanai.com/*",
+                "arn:aws:s3:::oksanai.com"
             ]
         }
     ]
