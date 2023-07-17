@@ -71,19 +71,6 @@ resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
   restrict_public_buckets = false
 }
 
-resource "aws_cloudfront_distribution_logging_config" "cloudfront_logs" {
-  distribution_id = aws_cloudfront_distribution.static_website_distribution.id
-
-  include_cookies = false
-  prefix          = "cloudfront-logs/"
-  
-  bucket {
-    domain_name = "oksanai.com"
-    bucket_regional_domain_name = "oksanai.com.s3.amazonaws.com"
-    acl = "private"
-  }
-}
-
 
 # ----- cloudFront distribution with the static website ------
 
