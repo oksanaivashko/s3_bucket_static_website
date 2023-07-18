@@ -121,9 +121,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_ttl            = 3600
   max_ttl                = 86400
  }
-  tags {
-    Environment = var.env
-   }
+  
   price_class = "PriceClass_100"
 
   restrictions {
