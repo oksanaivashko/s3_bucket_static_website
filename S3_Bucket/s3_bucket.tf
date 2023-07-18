@@ -98,7 +98,7 @@ resource "aws_acm_certificate" "certificate" {
   certificate_arn = aws_acm_certificate.certificate.arn
 
   validation_record_fqdns = [
-    aws_route53_record.oksanai.com.fqdn,
+    aws_route53_record.oksanai_com.fqdn,
   ] 
 }
 
@@ -106,7 +106,7 @@ resource "aws_acm_certificate_validation" "www_oksanai_com" {
   certificate_arn = aws_acm_certificate.certificate.arn
 
   validation_record_fqdns = [
-    aws_route53_record.www.oksanai.com.fqdn,
+    aws_route53_record.www_oksanai_com.fqdn,
   ] 
 }
 
@@ -115,7 +115,7 @@ resource "aws_route53_record" "acm_validation_oksanai_com" {
   name    = "oksanai.com"
   type    = "CNAME"
   ttl     = 300
-  records = [aws_acm_certificate.certificate.domain_validation_options.0.resource_record_value]
+  records = [aws_acm_certificate.certificate.domain_validation_options[0].resource_record_value]
   lifecycle {
     create_before_destroy = true
   }
@@ -126,7 +126,7 @@ resource "aws_route53_record" "acm_validation_www_oksanai_com" {
   name    = "www.oksanai.com"
   type    = "CNAME"
   ttl     = 300
-  records = [aws_acm_certificate.certificate.domain_validation_options.0.resource_record_value]
+  records = [aws_acm_certificate.certificate.domain_validation_options[0].resource_record_value]
   lifecycle {
     create_before_destroy = true
   }
@@ -138,7 +138,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name              = aws_s3_bucket.static_website.bucket_regional_domain_name
     #origin_access_control_id = aws_cloudfront_origin_access_control.default.id
-    #origin_id                = local.s3_origin_id
+    origin_id                = local.s3_origin_id
   }
 
   enabled             = true
