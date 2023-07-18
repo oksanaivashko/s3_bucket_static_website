@@ -94,7 +94,7 @@ resource "aws_acm_certificate" "certificate" {
   }
 }
 
-  resource "aws_acm_certificate_validation" "oksanai.com" {
+  resource "aws_acm_certificate_validation" "oksanai_com" {
   certificate_arn = aws_acm_certificate.certificate.arn
 
   validation_record_fqdns = [
@@ -102,7 +102,7 @@ resource "aws_acm_certificate" "certificate" {
   ] 
 }
 
-resource "aws_acm_certificate_validation" "www.oksanai.com" {
+resource "aws_acm_certificate_validation" "www_oksanai_com" {
   certificate_arn = aws_acm_certificate.certificate.arn
 
   validation_record_fqdns = [
@@ -110,7 +110,7 @@ resource "aws_acm_certificate_validation" "www.oksanai.com" {
   ] 
 }
 
-resource "aws_route53_record" "acm_validation_oksanai.com" {
+resource "aws_route53_record" "acm_validation_oksanai_com" {
   zone_id = "Z0480476I3YP7F1IGH87"
   name    = "acm_validation.oksanai.com"
   type    = "CNAME"
@@ -121,7 +121,7 @@ resource "aws_route53_record" "acm_validation_oksanai.com" {
   }
 }
 
-resource "aws_route53_record" "acm_validation_www.oksanai.com" {
+resource "aws_route53_record" "acm_validation_www_oksanai_com" {
   zone_id = "Z0480476I3YP7F1IGH87"
   name    = "acm_validation.www.oksanai.com"
   type    = "CNAME"
