@@ -92,6 +92,8 @@ resource "aws_acm_certificate" "certificate" {
   tags = {
     Environment = var.env
   }
+}
+
   resource "aws_acm_certificate_validation" "acm_validation" {
   certificate_arn = aws_acm_certificate.certificate.arn
 
@@ -104,7 +106,7 @@ resource "aws_acm_certificate" "certificate" {
   lifecycle {
     create_before_destroy = true
   }
-}
+
 
 
 # ----- Create Couldfront distribution with the static website ------
