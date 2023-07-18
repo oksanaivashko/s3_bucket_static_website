@@ -103,8 +103,8 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 resource "aws_route53_record" "acm_validation" {
-  zone_id = "ZONE_ID"
-  name    = "_acm_validation.oksanai.com"
+  zone_id = "Z0480476I3YP7F1IGH87"
+  name    = "acm_validation.oksanai.com"
   type    = "CNAME"
   ttl     = 300
   records = [
