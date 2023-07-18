@@ -99,8 +99,17 @@ resource "aws_acm_certificate" "certificate" {
 
   validation_record_fqdns = [
     aws_route53_record.acm_validation.fqdn,
+  ] 
+}
+
+resource "aws_route53_record" "acm_validation" {
+  zone_id = "ZONE_ID"
+  name    = "_acm_validation.oksanai.com"
+  type    = "CNAME"
+  ttl     = 300
+  records = [
+    aws_acm_certificate.certificate.domain_validation_options.0.resource_record_name,
   ]
-  
 }
 
 
