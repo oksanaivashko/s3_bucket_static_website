@@ -86,7 +86,7 @@ locals {
 
 resource "aws_acm_certificate" "certificate" {
   domain_name       = var.dns_name
-  subject_alternative_names = ["oksanai.com", "*.oksanai.com"]
+  subject_alternative_names = ["oksanai.com", "www.oksanai.com"]
   validation_method = "DNS"
   
   tags = {
@@ -126,7 +126,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   default_root_object = var.index_html
 
-  aliases = ["oksanai.com.com", "www.oksanai.com"]
+  aliases = ["oksanai.com", "www.oksanai.com"]
 
   default_cache_behavior {
   allowed_methods  = ["GET", "HEAD"]
