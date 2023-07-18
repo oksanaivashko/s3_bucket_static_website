@@ -78,7 +78,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
 #}
 
 locals {
-  s3_origin_id = "myS3Origin"
+  s3_origin_id = "oksanai"
 }
 
 
@@ -86,8 +86,9 @@ locals {
 
 resource "aws_acm_certificate" "certificate" {
   domain_name       = var.dns_name
+  subject_alternative_names = ["oksanai.com", "*.oksanai.com"]
   validation_method = "DNS"
-
+  
   tags = {
     Environment = var.env
   }
