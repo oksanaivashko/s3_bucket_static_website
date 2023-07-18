@@ -21,6 +21,8 @@ terraform {
   }
 }
 
+# ----- Create s3 Bucket
+
 resource "aws_s3_bucket" "static_website" {
   bucket = var.bucket_name
 
@@ -49,69 +51,102 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
         {
             "Sid": "AllowCloudFrontAccess",
             "Effect": "Allow",
-            "Principal": {
-        "AWS": "arn:aws:cloudfront::296584602587:distribution/E38BX16CN7PAD1"
-      },
+            "Principal": "*"
             "Action": [
                 "s3:GetObject"
             ],
-            "Resource": [
-                "arn:aws:s3:::oksanai.com/*",
-                "arn:aws:s3:::oksanai.com"
-            ]
+            "Resource": "arn:aws:s3:::oksanai.com/*"
+           
         }
     ]
-
   })
 }
 
-resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
+resource "aws_s3_bucket_acl" "public_acl" {
   bucket = aws_s3_bucket.static_website.id
+  acl    = "private"
+}
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+locals {
+  s3_origin_id = "myS3Origin"
 }
 
 
-# ----- cloudFront distribution with the static website ------
+# ----- Create Certificate -----
 
-resource "aws_cloudfront_distribution" "static_website_distribution" {
-  depends_on = [aws_s3_bucket.static_website]
+resource "aws_acm_certificate" "certificate" {
+  domain_name       = var.dns_name
+  validation_method = "DNS"
 
+  tags = {
+    Environment = var.env
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+# ----- Create Couldfront distribution with the static website ------
+
+resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = aws_s3_bucket.static_website.bucket_domain_name
-    origin_id   = aws_s3_bucket.static_website.id
-
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
+    domain_name              = aws_s3_bucket.static_website.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.default.id
+    origin_id                = local.s3_origin_id
   }
 
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = var.index_html
 
+  aliases = ["oksanai.com.com", "www.oksanai.com"]
+
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD"]
+  allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+  cached_methods   = ["GET", "HEAD"]
+  target_origin_id = local.s3_origin_id
+
+  forwarded_values {
+    query_string = false
+
+    cookies {
+      forward = "none"
+    }
+  }
+
+  viewer_protocol_policy = "allow-all"
+  min_ttl                = 0
+  default_ttl            = 3600
+  max_ttl                = 86400
+ }
+}
+
+# ----- Cache behavior with precedence -----
+
+ordered_cache_behavior {
+    path_pattern     = "/content/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = aws_s3_bucket.static_website.id
+    target_origin_id = local.s3_origin_id
 
     forwarded_values {
       query_string = false
+
       cookies {
         forward = "none"
       }
     }
 
-    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+    tags {
+    Environment = var.env
+   }
   }
 
   price_class = "PriceClass_100"
@@ -123,10 +158,8 @@ resource "aws_cloudfront_distribution" "static_website_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"  
-    ssl_support_method  = "sni-only"
+    cloudfront_default_certificate = true
   }
-}
 
 # ---- Route 53 record set ----
 
@@ -136,8 +169,8 @@ resource "aws_route53_record" "cloudfront_record" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.static_website_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.static_website_distribution.hosted_zone_id
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
 }

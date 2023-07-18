@@ -9,7 +9,7 @@ variable "bucket_name" {
 }
 
 variable "env" {
-  default = "dev"
+  default = "demo"
   type = string
 }
 
@@ -24,6 +24,13 @@ variable "error_html" {
 
 # ---- certificate arn ---
 variable "acm_arn" {
-  default = "arn:aws:acm:us-east-1:296584602587:certificate/e1759f8d-08a7-41b8-872f-31b17475b070"
+  default = ""
+  type = string
+}
+
+# --- Variables for Certificate ---
+
+variable "dns_name" {
+  default = "oksanai.com"
   type = string
 }
