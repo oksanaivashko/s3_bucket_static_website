@@ -38,14 +38,14 @@ website {
 
 }
 
-resource "aws_s3_bucket_public_access_block" "public_acl" {
-  bucket = aws_s3_bucket.static_website.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+#resource "aws_s3_bucket_public_access_block" "public_acl" {
+#  bucket = aws_s3_bucket.static_website.id
+#
+#  block_public_acls       = true
+#  block_public_policy     = true
+#  ignore_public_acls      = true
+#  restrict_public_buckets = true
+#}
 
 
 # ------ S3 Bucket Policies -------
@@ -61,7 +61,9 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
         {
             "Sid": "PublicReadGetObject",
             "Effect": "Allow",
-            "Principal": "*"
+            "Principal": {
+              "AWS": "arn:aws:cloudfront::296584602587:distribution/E2QYD1Z0CI65AL"
+            },
             "Action": [
                 "s3:GetObject"
             ],
@@ -72,10 +74,10 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
   })
 }
 
-#resource "aws_s3_bucket_acl" "public_acl" {
-#  bucket = aws_s3_bucket.static_website.id
-#  acl    = "private"
-#}
+resource "aws_s3_bucket_acl" "public_acl" {
+  bucket = aws_s3_bucket.static_website.id
+  acl    = "private"
+}
 
 locals {
   s3_origin_id = "oksanai"
