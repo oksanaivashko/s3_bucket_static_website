@@ -38,6 +38,16 @@ website {
 
 }
 
+resource "aws_s3_bucket_public_access_block" "public_acl" {
+  bucket = aws_s3_bucket.static_website.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+
 # ------ S3 Bucket Policies -------
 
 resource "aws_s3_bucket_policy" "static_website_policy" {
@@ -62,10 +72,10 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
   })
 }
 
-resource "aws_s3_bucket_acl" "public_acl" {
-  bucket = aws_s3_bucket.static_website.id
-  acl    = "private"
-}
+#resource "aws_s3_bucket_acl" "public_acl" {
+#  bucket = aws_s3_bucket.static_website.id
+#  acl    = "private"
+#}
 
 locals {
   s3_origin_id = "myS3Origin"
@@ -131,7 +141,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.certificate.id
+    ssl_support_method  = "sni-only"
   }
 }
 
