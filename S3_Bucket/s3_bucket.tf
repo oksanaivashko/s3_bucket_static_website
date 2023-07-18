@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   aliases = ["oksanai.com.com", "www.oksanai.com"]
 
   default_cache_behavior {
-  allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+  allowed_methods  = ["GET", "HEAD"]
   cached_methods   = ["GET", "HEAD"]
   target_origin_id = local.s3_origin_id
 
@@ -116,38 +116,14 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
-  viewer_protocol_policy = "allow-all"
+  viewer_protocol_policy = "redirect-to-https"
   min_ttl                = 0
   default_ttl            = 3600
   max_ttl                = 86400
- }
-}
-
-# ----- Cache behavior with precedence -----
-
-ordered_cache_behavior {
-    path_pattern     = "/content/*"
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
-
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
-
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
-    tags {
+  tags {
     Environment = var.env
    }
-  }
+ }
 
   price_class = "PriceClass_100"
 
@@ -160,6 +136,7 @@ ordered_cache_behavior {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+}
 
 # ---- Route 53 record set ----
 
