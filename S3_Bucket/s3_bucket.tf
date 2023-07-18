@@ -59,7 +59,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "AllowCloudFrontAccess",
+            "Sid": "PublicReadGetObject",
             "Effect": "Allow",
             "Principal": "*"
             "Action": [
@@ -92,6 +92,14 @@ resource "aws_acm_certificate" "certificate" {
   tags = {
     Environment = var.env
   }
+  resource "aws_acm_certificate_validation" "acm_validation" {
+  certificate_arn = aws_acm_certificate.certificate.arn
+
+  validation_record_fqdns = [
+    aws_route53_record.acm_validation.fqdn,
+  ]
+  
+}
 
   lifecycle {
     create_before_destroy = true
