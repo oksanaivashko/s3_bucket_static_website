@@ -52,9 +52,6 @@ resource "aws_s3_bucket_public_access_block" "public_acl" {
 
 resource "aws_s3_bucket_policy" "static_website_policy" {
   bucket = aws_s3_bucket.static_website.id
-  tags {
-    Environment = var.env
-  }
 
   policy = jsonencode({
     
@@ -90,8 +87,7 @@ locals {
 resource "aws_acm_certificate" "certificate" {
   domain_name       = var.dns_name
   subject_alternative_names = ["oksanai.com", "www.oksanai.com"]
-  validation_method = "DNS"
-  
+  validation_method = "DNS" 
   tags {
     Environment = var.env
   }
