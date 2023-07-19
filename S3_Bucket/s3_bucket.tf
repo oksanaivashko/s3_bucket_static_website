@@ -107,9 +107,9 @@ resource "aws_acm_certificate_validation" "www_oksanai_com" {
 resource "aws_route53_record" "oksanai_com" {
   zone_id = "Z0480476I3YP7F1IGH87"
   name    = "oksanai.com"
-  type    = "A"
+  type    = "CNAME"
   ttl     = 300
-  records = aws_acm_certificate.certificate.domain_validation_options[*].resource_record_value
+  records = aws_acm_certificate.certificate.domain_validation_options.0.resource_record_value
   lifecycle {
     create_before_destroy = true
   }
@@ -118,9 +118,9 @@ resource "aws_route53_record" "oksanai_com" {
 resource "aws_route53_record" "www_oksanai_com" {
   zone_id = "Z0480476I3YP7F1IGH87"
   name    = "www.oksanai.com"
-  type    = "A"
+  type    = "CNAME"
   ttl     = 300
-  records = aws_acm_certificate.certificate.domain_validation_options[*].resource_record_value
+  records = aws_acm_certificate.certificate.domain_validation_options.0.resource_record_value
   lifecycle {
     create_before_destroy = true
   }
