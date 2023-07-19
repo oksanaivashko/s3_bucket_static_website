@@ -88,7 +88,7 @@ resource "aws_acm_certificate" "certificate" {
   domain_name       = var.dns_name
   subject_alternative_names = ["oksanai.com", "www.oksanai.com"]
   validation_method = "DNS" 
-  tags {
+  tags = {
     Environment = var.env
   }
 }
@@ -176,7 +176,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     acm_certificate_arn = aws_acm_certificate.certificate.id
     ssl_support_method  = "sni-only"
   }
-  tags {
+  tags = {
     Environment = var.env
   }
 }
