@@ -187,7 +187,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 # ---- Route 53 record set ----
 
-resource "aws_route53_record" "cloudfront_record" {
+resource "aws_route53_record" "cloudfront_record_a" {
   zone_id = "Z0480476I3YP7F1IGH87"  
   name    = "oksanai.com"           
   type    = "A"
@@ -199,7 +199,7 @@ resource "aws_route53_record" "cloudfront_record" {
   }
 }
 
-resource "aws_route53_record" "cloudfront_record" {
+resource "aws_route53_record" "cloudfront_record_b" {
   zone_id = "Z0480476I3YP7F1IGH87"  
   name    = "www.oksanai.com"           
   type    = "A"
