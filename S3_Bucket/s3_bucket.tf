@@ -72,11 +72,6 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
   })     
 }
 
-resource "aws_s3_bucket_acl" "public_acl" {
-  bucket = aws_s3_bucket.static_website.id
-  acl    = "private"
-}
-
 locals {
   s3_origin_id = var.bucket_name
 }
@@ -175,9 +170,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.certificate.id
     ssl_support_method  = "sni-only"
-  }
-  tags = {
-    Environment = var.env
   }
 }
 
