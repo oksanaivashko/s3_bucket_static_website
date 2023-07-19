@@ -32,8 +32,8 @@ resource "aws_s3_bucket" "static_website" {
   }
 
 website {
-    index_document = "index.html"
-    error_document = "error.html"
+    index_document = var.index_html
+    error_document = var.error_html
   }
 
 }
@@ -52,6 +52,9 @@ resource "aws_s3_bucket_public_access_block" "public_acl" {
 
 resource "aws_s3_bucket_policy" "static_website_policy" {
   bucket = aws_s3_bucket.static_website.id
+  tags  {
+    Environment = var.env
+  }
 
   policy = jsonencode({
     
@@ -61,9 +64,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
         {
             "Sid": "PublicReadGetObject",
             "Effect": "Allow",
-            "Principal": {
-              "AWS": "arn:aws:cloudfront::296584602587:distribution/E2QYD1Z0CI65AL"
-            },
+            "Principal": "*"
             "Action": [
                 "s3:GetObject"
             ],
@@ -71,7 +72,7 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
            
         }
     ]
-  })
+  })     
 }
 
 resource "aws_s3_bucket_acl" "public_acl" {
@@ -80,7 +81,7 @@ resource "aws_s3_bucket_acl" "public_acl" {
 }
 
 locals {
-  s3_origin_id = "oksanai"
+  s3_origin_id = var.bucket_name
 }
 
 
@@ -91,7 +92,7 @@ resource "aws_acm_certificate" "certificate" {
   subject_alternative_names = ["oksanai.com", "www.oksanai.com"]
   validation_method = "DNS"
   
-  tags = {
+  tags  {
     Environment = var.env
   }
 }
@@ -151,7 +152,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
   allowed_methods  = ["GET", "HEAD"]
   cached_methods   = ["GET", "HEAD"]
-  target_origin_id = local.s3_origin_id
+  #target_origin_id = local.s3_origin_id
 
   forwarded_values {
     query_string = false
@@ -179,6 +180,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     acm_certificate_arn = aws_acm_certificate.certificate.id
     ssl_support_method  = "sni-only"
   }
+  tags {
+    Environment = var.env
+  }
 }
 
 # ---- Route 53 record set ----
@@ -186,6 +190,18 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 resource "aws_route53_record" "cloudfront_record" {
   zone_id = "Z0480476I3YP7F1IGH87"  
   name    = "oksanai.com"           
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "cloudfront_record" {
+  zone_id = "Z0480476I3YP7F1IGH87"  
+  name    = "www.oksanai.com"           
   type    = "A"
 
   alias {
