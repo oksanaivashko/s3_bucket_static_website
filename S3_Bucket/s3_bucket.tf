@@ -94,6 +94,9 @@ resource "aws_acm_certificate" "certificate" {
   validation_record_fqdns = [
     aws_route53_record.oksanai_com.fqdn,
   ] 
+  depends_on = [
+    aws_route53_record.oksanai_com,
+  ]
 }
 
 resource "aws_acm_certificate_validation" "www_oksanai_com" {
@@ -102,6 +105,9 @@ resource "aws_acm_certificate_validation" "www_oksanai_com" {
   validation_record_fqdns = [
     aws_route53_record.www_oksanai_com.fqdn,
   ] 
+  depends_on = [
+    aws_route53_record.www.oksanai_com,
+  ]
 }
 
 resource "aws_route53_record" "oksanai_com" {
